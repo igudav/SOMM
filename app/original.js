@@ -1,27 +1,3 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<!--[if IE]><script src="excanvas.js"></script><![endif]-->
-	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-	<meta charset="utf-8" />
-	<title>ski-o map memory</title>
-<style>
-body {
-  padding:0;
-  margin:0;
-  background:#666;
-}
-canvas {
-  display:block;
-  margin:auto;
-  background:#ffffff;
-}
-input {
-    font: 16px arial;
-}
-</style>
-<script>
 var	canvas,
 	ctx,
 	ctxWidth,
@@ -339,7 +315,7 @@ function BuildMap()
 						}
 
     // TODO understand why should we go through twice. Try to do it once
-	//go through each one and randomly turn off a few:
+	//go through each one and randomly turn off a few edges:
 	var THRESH = 0.1;
 	for(var x=0; x<GRID; x++)
 		for(var y=0; y<GRID; y++)
@@ -883,21 +859,3 @@ function gameLoop()
 }
 
 window.onload = init;
-</script>
-</head>
-
-<body>
-  <center>
-    <input id="menuNewMap" type="button" value="New Map" onclick="MenuNewMap()">
-    <input id="menuNewLeg" type="button" value="New Leg" onclick="MenuNewLeg()">
-    <input id="menuGo" type="button" value="Go" onclick="MenuGo()">
-    <input id="menuRestart" type="button" value="Restart" onclick="MenuRestart()" style="display:none">
-    <input id="menuContinue" type="button" value="Continue" onclick="MenuContinue()"  style="display:none">
-    <input id="menuStop" type="button" value="Stop" onclick="MenuStop()" style="display:none">
-    <input type="checkbox" onclick="MenuCompass()"><font style="font: 10px arial; color:white">Compass</font>
-    <div id="fullscreen" style="display:inline"><input type="checkbox" checked onclick="mFullscreen=!mFullscreen;WindowResize()"><font style="font: 10px arial; color:white">Fullscreen</font></div>
-    <br>
-    <canvas id="canvas"></canvas>
-  </center>
-</body>
-</html>
