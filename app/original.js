@@ -31,8 +31,8 @@ function FRAND()		{ return Math.random(); }
 function RandRange(a,b)		{ return FRAND() * (b-a) + a; }
 function RandRangeI(a,b)	{ return Math.floor(FRAND()*(b-a+1)) + a; }
 function Interpolate(a, b, i)	{ return a + (b-a) * i; }
-//TODO check the first op
-function Clamp(x,a,b)		{ return (x<a ? x : (x>b?b:x)); }
+// Here was (x<a ? a : (x>b?b:x)), but I changed
+function Clamp(x,a,b)		{ return (x<a ? a : (x>b?b:x)); }
 
 function Create2DArray(size)
 {
@@ -137,6 +137,7 @@ function DrawControl(ctx,x,y,ang)
 
 	ctx.restore();
 }
+
 
 function MapNode(aPos)
 {
@@ -302,11 +303,11 @@ function BuildMap()
 	}
 
 	//randomly turn off some nodes on the grid:
+	var NODESSPARSENESS = 0.6
 	for(var s=2; s<6; s++)
 		for(var x=0; x<GRID; x+=s)
 			for(var y=0; y<GRID; y+=s)
-			    // TODO make 0.6 great again!
-				if(FRAND()<0.6)
+				if(FRAND()<NODESSPARSENESS)
 					for(var a=0; a<4; a++)
 						if(nodes[x][y] & (1<<a))
 						{
@@ -314,14 +315,13 @@ function BuildMap()
 							nodes[x+dx[a]][y+dy[a]] &= ~(1<<(a^1));
 						}
 
-    // TODO understand why should we go through twice. Try to do it once
 	//go through each one and randomly turn off a few edges:
-	var THRESH = 0.1;
+	var MAPCONNECTIVITY = 0.09;
 	for(var x=0; x<GRID; x++)
 		for(var y=0; y<GRID; y++)
 			for(var a=0; a<4; a++)
 				if(nodes[x][y] & (1<<a))
-					if(FRAND()<THRESH)
+					if(FRAND()<MAPCONNECTIVITY)
 					{
 						nodes[x][y] &= ~(1<<a);
 						nodes[x+dx[a]][y+dy[a]] &= ~(1<<(a^1));
@@ -477,7 +477,7 @@ function BuildMap()
 function InitCourse()
 {
 	//pick a random start node, put the dot there:
-	mSrcNode = mMapNodes[RandRangeI(0,mMapNodes.length-1)];
+	mSrcNode = mMapNodes[RandRangeI(0,mMapNodes.length - 1)];
 
 	//pick a random end node, make sure its far from the start node:
 	var dist = 0;
