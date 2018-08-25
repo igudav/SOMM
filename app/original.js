@@ -329,8 +329,6 @@ function BuildMap()
 
 	//remove any nodes that only have have one neighbor:
 	var busy = true;
-
-	// TODO mb optimize going though the map deleting one node from chain?
 	while(busy)
 	{
 		busy = false;

@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.Vector;
-
 public class MapView extends View {
 
     public MapView(Context context) {
