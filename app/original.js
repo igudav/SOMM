@@ -16,9 +16,9 @@ var	canvas,
 	mDotI,		//i between from-to
 	mDotPos = new vec2(0,0),	//render position of dot
 	mDotAng = 0,
-	mDotAngPID = new PID(0.16,0.1,0),
-	mDotPosxPID = new PID(0.16,0.1,0),
-	mDotPosyPID = new PID(0.16,0.1,0),
+	mDotAngPID = new PID(0.16, 0.1, 0),
+	mDotPosxPID = new PID(0.16, 0.1, 0),
+	mDotPosyPID = new PID(0.16, 0.1, 0),
 	mMoving = false,
 	mMenu = true,
 	mAtStart = true,
@@ -426,7 +426,7 @@ function BuildMap()
 				{
 					var p = vec2.sub(xy[x][y], center);
 					var d = p.length() / RAD;
-					var a = Interpolate(ang,0,Clamp(d,0.5,1.));
+					var a = Interpolate(ang, 0, Clamp(d, 0.5, 1.0));
 					var o = new vec2(Math.cos(a) * p.x - Math.sin(a) * p.y,
 							 Math.sin(a) * p.x + Math.cos(a) * p.y);
 					xy[x][y] = vec2.add(o,center);

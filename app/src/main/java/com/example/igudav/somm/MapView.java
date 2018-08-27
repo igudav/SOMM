@@ -22,13 +22,4 @@ public class MapView extends View {
         super(context, attrs, defStyleAttr);
     }
 
-    @Override
-    public void onDraw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(Color.GREEN);
-        paint.setTextSize(20);
-        paint.setAntiAlias(true);
-        canvas.drawColor(Color.WHITE);
-        canvas.drawText("Hello Kitty", 10, 20, paint);
-    }
 }
