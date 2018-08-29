@@ -2,6 +2,7 @@ package com.example.igudav.somm;
 
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.opengl.Matrix;
 import android.view.SurfaceHolder;
 
@@ -26,10 +27,29 @@ public class DrawThread extends Thread {
 
     @Override
     public void run() {
-        Canvas canvas;
+        Canvas canvas = null;
+        prevTime = System.currentTimeMillis();
+        Map.initGraphics();
 
         while (isRunning) {
-
+            long curTime = System.currentTimeMillis();
+            if (curTime - prevTime >= 1000 / 60) {
+                prevTime = curTime;
+                try {
+                    canvas = surfaceHolder.lockCanvas(null);
+                    synchronized (surfaceHolder) {
+                        Paint p = new Paint();
+                        p.setStyle(Paint.Style.FILL);
+                        p.setARGB(255, 255, 255, 255);
+                        canvas.drawRect(canvas.getClipBounds(), p);
+                        Map.drawArrows(canvas, 100, 100, 0);
+                    }
+                } finally {
+                    if (canvas != null) {
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
+                }
+            }
         }
 
     }

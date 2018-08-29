@@ -1,12 +1,40 @@
 package com.example.igudav.somm;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+
 import java.util.ArrayList;
 
 public class Map {
 
+    enum State {
+        MAPOVERVIEW,
+        WAITINGCHOICE,
+        MOVING,
+        PAUSED,
+        FINISHED,
+        ATSTART
+    }
+
     private static int grid = 20;
     private static int scale = 20;
     private ArrayList<MapNode> mMapNodes;
+    private ArrayList<MapNode> mRouteNodes;
+    private MapNode mDotNode;
+    private int mDotFrom; // neighbor index
+    private int mDotTo; // neighbor index
+    private MapNode mSrcNode;
+    private MapNode mDstNode;
+    private double mDotI; // part of a way from one node to neighbor
+    private Vec mDotPos;
+    private double mDotAng;
+    private State state;
+
+    // graphics
+    private static Path arrowPath;
+    private static Paint arrowPaint;
 
     public static void set2DArray(int[][] arr, int value) {
         int len = arr.length;
@@ -231,7 +259,88 @@ public class Map {
                 }
             }
         }
+
+        state = State.MAPOVERVIEW;
     }
 
+    public void InitCourse() {
 
+        mSrcNode = mMapNodes.get(Vec.randRangeInt(0, mMapNodes.size()));
+
+        double dist = 0;
+        while (dist < 3 * scale) {
+            mDstNode = mMapNodes.get(Vec.randRangeInt(0, mMapNodes.size()));
+            dist = Vec.sub(mDstNode.getCenter(), mSrcNode.getCenter()).length();
+        }
+
+        InitDot();
+    }
+
+    public void InitDot() {
+        mRouteNodes.clear();
+
+        mDotNode = mSrcNode;
+        mDotFrom = mDotNode.getValidNeighborIdx(Vec.randRangeInt(1,4));
+        mDotTo = mDotFrom;
+        while (mDotTo == mDotFrom) {
+            mDotTo = mDotNode.getValidNeighborIdx(Vec.randRangeInt(1,4));
+        }
+        mDotI = 0.5;
+        updateDotPos();
+        state = State.ATSTART;
+    }
+
+    public void updateDotPos() {
+
+        Vec p1 = mDotNode.getNeighborPos(mDotFrom, 0.5);
+        Vec p2 = mDotNode.getNeighborPos(mDotTo, 0.5);
+        Vec c1 = Vec.interpolate(p1, mDotNode.getCenter(), 0.7);
+        Vec c2 = Vec.interpolate(p2, mDotNode.getCenter(), 0.7);
+        mDotPos = Vec.bezier(p1, c1, c2, p2, mDotI);
+        Vec dir = Vec.sub(Vec.bezier(p1, c1, c2, p2,mDotI+0.001), mDotPos);
+        mDotAng = Math.atan2(dir.getX(), dir.getY()) + Math.PI;
+    }
+
+    public static void initGraphics() {
+        float arrowScale = 100;
+        arrowPath = new Path();
+        arrowPath.moveTo(0, -arrowScale);
+        arrowPath.lineTo(-arrowScale * (float) 0.3, -arrowScale);
+        arrowPath.lineTo(-arrowScale * (float) 0.2, 0);
+        arrowPath.lineTo(-arrowScale * (float) 0.7, 0);
+        arrowPath.lineTo(0, arrowScale);
+        arrowPath.lineTo(arrowScale * (float) 0.7, 0);
+        arrowPath.lineTo(arrowScale * (float) 0.2, 0);
+        arrowPath.lineTo(arrowScale * (float) 0.3, -arrowScale);
+        arrowPath.lineTo(0, -arrowScale);
+        arrowPath.close();
+
+        arrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    }
+
+    public static void drawArrows(Canvas canvas, double x, double y, double ang) {
+
+        double c = Math.sin(System.currentTimeMillis() / 200) * 0.1 + 0.9;
+
+        arrowPaint.setStyle(Paint.Style.FILL);
+        arrowPaint.setARGB(255, (int) Math.floor(c * 255), (int) Math.floor(c * 128), 0);
+
+        canvas.save();
+        canvas.translate((float) x, (float) y);
+        canvas.rotate((float) Math.toDegrees(ang));
+        canvas.drawPath(arrowPath, arrowPaint);
+
+        arrowPaint.setStyle(Paint.Style.STROKE);
+        arrowPaint.setStrokeWidth(10);
+        arrowPaint.setColor(Color.BLACK);
+
+        canvas.drawPath(arrowPath, arrowPaint);
+
+        canvas.restore();
+
+    }
+
+    public void draw(Canvas canvas) {
+
+    }
 }

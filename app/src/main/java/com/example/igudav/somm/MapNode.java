@@ -16,6 +16,10 @@ public class MapNode {
         startNeighbor = Vec.randRangeInt(-5, 5);
     }
 
+    public Vec getCenter() {
+        return center;
+    }
+
     public int getValidNeighborIdx(int neighborNum) {
         int c = -1;
         while (neighborNum > 0) {
@@ -56,6 +60,8 @@ public class MapNode {
             this.startNeighbor = 1;
         }
     }
+
+
 
     // TODO write drawing funcs (here?) and write updateDotPos in MapView
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="item_new_map">Новая Карта</string>
+    <string name="item_settings">Настройки</string>
+    <string name="item_about">О приложении</string>
+    <string name="item_new_leg">Новый перегон</string>
+</resources>
